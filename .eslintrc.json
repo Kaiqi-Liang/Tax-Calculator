@@ -24,7 +24,8 @@
         "object-curly-spacing": ["error", "always"],
         "require-jsdoc": "off",
         "no-unused-vars": "warn",
-        "max-len": "warn"
+        "max-len": "warn",
+        "indent": "warn"
     },
     "settings": {
       "react": {

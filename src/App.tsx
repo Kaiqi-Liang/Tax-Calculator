@@ -8,12 +8,16 @@ import { TextField,
 import { styled } from '@mui/system';
 import TaxAmount from './components/TaxAmount';
 import TaxCategory from './components/TaxCategory';
+import UploadButton from './components/Upload';
+import CalculateIcon from '@mui/icons-material/Calculate';
 
+type OutputProps = { output: boolean };
 const Main = styled('div')({
   height: '100vh',
   width: '100vw',
   margin: '10px',
   display: 'flex',
+  flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
 });
@@ -21,16 +25,16 @@ const Main = styled('div')({
 const Form = styled('form')({
   display: 'flex',
   flexDirection: 'column',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  height: '350px',
+  border: '1px solid',
+  padding: '20px',
 });
 
-const Input = styled('div')({
-  display: 'flex',
-  gap: '1rem',
-});
-
-type OutputProps = { output: boolean };
 const Output = styled('div')<OutputProps>(({ output } ) => ({
   display: output ? 'block' : 'none',
+  border: '1px solid',
 }));
 
 function App() {
@@ -54,45 +58,46 @@ function App() {
     <Main>
       <CssBaseline />
       <Form>
-        <Input>
-          <FormControlLabel
-            control={
-              <Checkbox
-                value={checkbox}
-                onChange={() => setCheckbox(!checkbox)}
-              />
-            }
-            label='Do you want to enter tax'
-          />
-          <TextField
-            variant='outlined'
-            value={salary}
-            label='Fortnightly salary'
-            type='number'
-            onChange={({ target }) => onChangeHandler(target.value, setSalary)}
-          />
-          <TextField
-            variant='outlined'
-            value={tax}
-            label='Tax'
-            type='number'
-            onChange={({ target }) => onChangeHandler(target.value, setTax)}
-            disabled={!checkbox}
-          />
-          <Button
-            variant='contained'
-            onClick={() => setOutput(true)}
-          >
-            Submit
-          </Button>
-        </Input>
-        <Output output={output}>
-          {checkbox ?
-            <TaxCategory salary={salary} tax={tax} /> :
-            <TaxAmount salary={salary} />
+        <TextField
+          variant='outlined'
+          value={salary}
+          label='Fortnightly salary'
+          type='number'
+          onChange={({ target }) => onChangeHandler(target.value, setSalary)}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              value={checkbox}
+              onChange={() => setCheckbox(!checkbox)}
+            />
           }
-        </Output>
+          label='Do you want to enter tax'
+        />
+        <TextField
+          variant='outlined'
+          value={tax}
+          label='Tax'
+          type='number'
+          onChange={({ target }) => onChangeHandler(target.value, setTax)}
+          disabled={!checkbox}
+        />
+        <UploadButton />
+        <Button
+          variant='contained'
+          onClick={() => setOutput(true)}
+          startIcon={<CalculateIcon />}
+          endIcon={<CalculateIcon />}
+        >
+          Calculate
+        </Button>
       </Form>
+      <Output output={output}>
+        {checkbox ?
+          <TaxCategory salary={salary} tax={tax} /> :
+          <TaxAmount salary={salary} />
+        }
+      </Output>
     </Main>
   );
 }
