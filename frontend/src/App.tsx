@@ -82,7 +82,11 @@ function App() {
           onChange={({ target }) => onChangeHandler(target.value, setTax)}
           disabled={!checkbox}
         />
-        <UploadButton />
+        <UploadButton
+          setTax={setTax}
+          setSalary={setSalary}
+          setCheckbox={setCheckbox}
+        />
         <Button
           variant='contained'
           onClick={() => setOutput(true)}

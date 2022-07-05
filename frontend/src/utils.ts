@@ -33,12 +33,15 @@ const lookup = (salary: number, scale: TaxScaleEntry[]) => {
   }
 };
 
-type Category = 'No Tax Free Threshold' | 'Tax Free Threshold' | 'Non Resident';
+type Category = 'No Tax Free Threshold'
+              | 'Tax Free Threshold'
+              | 'Non Resident'
+              | 'Other';
 
 const withinCategory = (
     category: (salary: number) => number): (salary: number, tax: number
 ) => boolean => {
-  return (salary: number, tax: number) => Math.abs(tax - category(salary)) < 5;
+  return (salary: number, tax: number) => Math.abs(tax - category(salary)) < 2;
 };
 
 export const findCategory = (salary: number, tax: number): Category => {
@@ -46,8 +49,10 @@ export const findCategory = (salary: number, tax: number): Category => {
     return 'Tax Free Threshold';
   } else if (withinCategory(calcNoTaxFreeThresholdTax)(salary, tax)) {
     return 'No Tax Free Threshold';
-  } else {
+  } else if (withinCategory(calcNonResidentTax)(salary, tax)) {
     return 'Non Resident';
+  } else {
+    return 'Other';
   }
 };
 
