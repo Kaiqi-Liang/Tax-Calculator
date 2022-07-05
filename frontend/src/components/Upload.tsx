@@ -44,11 +44,12 @@ function UploadButton({ setTax, setSalary, setCheckbox }:
         />
         <Button
           variant="contained"
+          color='secondary'
           component="span"
           startIcon={<Receipt />}
           endIcon={<Receipt />}
         >
-          Upload Paycheck
+          Upload Payslip
         </Button>
       </label>
     </Stack>
