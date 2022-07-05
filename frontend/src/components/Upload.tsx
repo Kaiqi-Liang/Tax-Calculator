@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Receipt from '@mui/icons-material/Receipt';
-import { PORT } from '../config';
+import { SERVER_URL } from '../config';
 
 const Input = styled('input')({
   display: 'none',
@@ -28,15 +28,17 @@ function UploadButton({ setTax, setSalary, setCheckbox }:
             if (files) {
               const form = new FormData();
               form.append('pdf', files[0]);
-              fetch(`http://127.0.0.1:${PORT}`, {
+              fetch(SERVER_URL, {
                 method: 'post',
                 body: form,
-              }).then((r) => r.json())
-                  .then(({ tax, salary }) => {
-                    setTax(tax);
-                    setSalary(salary);
-                    setCheckbox(true);
-                  });
+              }).then((r) => {
+                if (r.ok) return r.json();
+                else throw new Error('No pdf uploaded');
+              }).then(({ tax, salary }) => {
+                setTax(tax);
+                setSalary(salary);
+                setCheckbox(true);
+              }).catch((e) => console.warn(e));
             }
           }}
         />
