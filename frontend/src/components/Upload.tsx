@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { Button, IconButton, Stack } from '@mui/material';
-import { UploadFile } from '@mui/icons-material';
+import { Button, Stack } from '@mui/material';
 import Receipt from '@mui/icons-material/Receipt';
 const SERVER_URL = 'https://tax-calculator-355806.ts.r.appspot.com/';
 
@@ -17,12 +16,16 @@ function UploadButton({ setTax, setSalary, setOpen }:
   },
 ) {
   return (
-    <Stack direction="row" alignItems="center" spacing={2} sx={{ width: '100%' }}>
-      <label htmlFor="contained-button-file" style={{ width: '100%' }}>
+    <Stack
+      direction='row'
+      alignItems='center'
+      spacing={2}
+      sx={{ width: '100%' }}>
+      <label htmlFor='contained-button-file' style={{ width: '100%' }}>
         <Input
-          accept=".pdf"
-          id="contained-button-file"
-          type="file"
+          accept='.pdf'
+          id='contained-button-file'
+          type='file'
           onChange={({ target }) => {
             const files = target.files;
             if (files) {
@@ -44,9 +47,9 @@ function UploadButton({ setTax, setSalary, setOpen }:
         />
         <Button
           fullWidth
-          variant="contained"
+          variant='contained'
           color='secondary'
-          component="span"
+          component='span'
           startIcon={<Receipt />}
           endIcon={<Receipt />}
         >

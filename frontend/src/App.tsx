@@ -39,11 +39,6 @@ const Form = styled('form')({
   columnGap: '1rem',
 });
 
-const Input = styled(Box)({
-  display: 'flex',
-  gap: '1rem',
-});
-
 const CardContainer = styled(Box)({
   display: 'flex',
   gap: '2rem',
@@ -97,8 +92,8 @@ function App() {
   };
 
   const onChangeHandler = (
-    input: string,
-    setState: React.Dispatch<React.SetStateAction<string>>,
+      input: string,
+      setState: React.Dispatch<React.SetStateAction<string>>,
   ) => {
     if (input === '') {
       setState('');
@@ -160,15 +155,15 @@ function App() {
           setOpen={setOpen}
         />
         <Stack direction="row" alignItems="center" spacing={2}>
-        <Button
-          fullWidth
-          variant='contained'
-          onClick={handleCalculate}
-          startIcon={<CalculateIcon />}
-          endIcon={<CalculateIcon />}
-        >
+          <Button
+            fullWidth
+            variant='contained'
+            onClick={handleCalculate}
+            startIcon={<CalculateIcon />}
+            endIcon={<CalculateIcon />}
+          >
           Calculate
-        </Button>
+          </Button>
         </Stack>
         <Snackbar
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
