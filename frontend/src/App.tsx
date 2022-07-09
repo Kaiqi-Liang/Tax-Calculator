@@ -21,12 +21,12 @@ import {
 import CategoryCard from './components/CategoryCard';
 import UploadButton from './components/Upload';
 
-const Main = styled('div')({
-  height: '100vh',
+const Main = styled('main')({
   width: '100vw',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
+  padding: '0 5rem 3rem',
 });
 
 const Form = styled('form')({
@@ -42,10 +42,8 @@ const Form = styled('form')({
 const CardContainer = styled(Box)({
   display: 'flex',
   gap: '2rem',
-  paddingBottom: '3rem',
   flexWrap: 'wrap',
   justifyContent: 'center',
-  padding: '0 5rem',
 });
 
 const Title = styled(Typography)({
