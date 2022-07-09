@@ -11,6 +11,11 @@ const darkTheme = createTheme({
       main: green[400],
     },
   },
+  typography: {
+    button: {
+      textTransform: 'none',
+    },
+  },
 });
 
 const root = ReactDOM.createRoot(

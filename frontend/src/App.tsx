@@ -4,31 +4,33 @@ import {
   CssBaseline,
   Button,
   Box,
+  Typography,
+  Stack,
 } from '@mui/material';
 import { styled } from '@mui/system';
-import TaxAmount from './components/TaxAmount';
-import TaxCategory from './components/TaxCategory';
 import UploadButton from './components/Upload';
 import CalculateIcon from '@mui/icons-material/Calculate';
+import CategoryCard from './components/CategoryCard';
+import { calcNonResidentTax, calcNoTaxFreeThresholdTax, calcTaxFreeThresholdTax } from './utils';
 
 type OutputProps = { output: boolean };
+
 const Main = styled('div')({
   height: '100vh',
   width: '100vw',
-  margin: '10px',
+  margin: '5rem',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'center',
   alignItems: 'center',
 });
 
 const Form = styled('form')({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  height: '350px',
+  display: 'grid',
+  gridTemplateColumns: '1fr 1fr',
+  height: '12rem',
   padding: '20px',
+  marginBottom: '2rem',
+  columnGap: '1rem',
 });
 
 const Input = styled(Box)({
@@ -36,23 +38,56 @@ const Input = styled(Box)({
   gap: '1rem',
 });
 
-const Output = styled('div')<OutputProps>(({ output }) => ({
-  display: output ? 'block' : 'none',
-  border: '1px solid',
-}));
+const CardContainer = styled(Box)({
+  display: 'flex',
+  gap: '2rem',
+});
+
+const Title = styled(Typography)({
+  margin: '3rem',
+});
+
+enum TaxCategory {
+  TaxFreeThreshold = 'TaxFreeThreshold',
+  NonTaxFreeThreshold = 'nonTaxFreeThreshold',
+  NonResident = 'nonResident'
+}
+
+const taxCategories = [
+  {
+    id: TaxCategory.TaxFreeThreshold,
+    title: 'Tax Free Threshold',
+    description: 'If you are an Australian resident for tax purposes for a full year, you pay no tax on the first $18,200 of your income. This is called the tax-free threshold.',
+    link: 'https://www.ato.gov.au/Individuals/Ind/Tax-free-threshold-for-newcomers-to-Australia/',
+    taxFn: calcTaxFreeThresholdTax,
+  },
+  {
+    id: TaxCategory.NonTaxFreeThreshold,
+    title: 'Non Tax Free Threshold',
+    description: 'Claiming the tax-free threshold ($18,200) reduces the amount of tax withheld from your income. If you have more than one payer at the same time, generally, you only claim the tax-free threshold from one payer so that payer will tax you slightly less than the others',
+    link: 'https://www.ato.gov.au/Individuals/Jobs-and-employment-types/Working-as-an-employee/Income-from-more-than-one-job/',
+    taxFn: calcNoTaxFreeThresholdTax,
+  },
+  {
+    id: TaxCategory.NonResident,
+    title: 'Non Resident',
+    description: 'Essentially, this will affect how much tax you pay. Non-residents get taxed at a higher rate than residents in Australia. The main requirement to be deemed a resident for tax purposes is that you have continuously resided in Australia for a period of 183 days (6 months).',
+    link: 'https://www.ato.gov.au/Individuals/Coming-to-Australia-or-going-overseas/Your-tax-residency/Australian-resident-for-tax-purposes/',
+    taxFn: calcNonResidentTax,
+  },
+];
+
+type TaxResult = Record<TaxCategory, number>;
 
 function App() {
   const [salary, setSalary] = React.useState<string>('');
-  const [tax, setTax] = React.useState<string>('');
-  const [output, setOutput] = React.useState(false);
-
-  React.useEffect(() => {
-    setOutput(false);
-  }, [salary, tax]);
+  const [taxInput, setTaxInput] = React.useState<string>('');
+  const [tax, setTax] = React.useState<number>(NaN);
+  const [output, setOutput] = React.useState<TaxResult | undefined>();
 
   const onChangeHandler = (
-      input: string,
-      setState: React.Dispatch<React.SetStateAction<string>>,
+    input: string,
+    setState: React.Dispatch<React.SetStateAction<string>>,
   ) => {
     if (input === '') {
       setState('');
@@ -61,51 +96,67 @@ function App() {
     }
   };
 
+  const handleCalculate = () => {
+    const fsalary = parseFloat(salary);
+    setOutput({
+      [TaxCategory.TaxFreeThreshold]: calcTaxFreeThresholdTax(fsalary),
+      [TaxCategory.NonTaxFreeThreshold]: calcNoTaxFreeThresholdTax(fsalary),
+      [TaxCategory.NonResident]: calcNonResidentTax(fsalary),
+    });
+    setTax(parseFloat(taxInput));
+  };
+
   return (
     <Main>
       <CssBaseline />
+      <Title variant='h1'>
+        Tax Calculator
+      </Title>
       <Form>
-        <Input>
-          <TextField
-            variant='outlined'
-            value={salary}
-            label='Fortnightly salary'
-            type='number'
-            onChange={({ target }) => onChangeHandler(target.value, setSalary)}
-          />
-          <TextField
-            variant='outlined'
-            value={tax}
-            label='Tax (optional)'
-            type='number'
-            onChange={({ target }) => onChangeHandler(target.value, setTax)}
-          />
-          <UploadButton
-            setTax={setTax}
-            setSalary={setSalary}
-          />
-        </Input>
+        <TextField
+          variant='outlined'
+          value={salary}
+          label='Fortnightly salary'
+          type='number'
+          onChange={({ target }) => onChangeHandler(target.value, setSalary)}
+        />
+        <TextField
+          variant='outlined'
+          value={taxInput}
+          label='Tax (optional)'
+          type='number'
+          onChange={({ target }) => onChangeHandler(target.value, setTaxInput)}
+        />
+        <UploadButton
+          setTax={setTaxInput}
+          setSalary={setSalary}
+        />
+        <Stack direction="row" alignItems="center" spacing={2}>
         <Button
+          fullWidth
           variant='contained'
-          onClick={() => setOutput(true)}
+          onClick={handleCalculate}
           startIcon={<CalculateIcon />}
           endIcon={<CalculateIcon />}
         >
           Calculate
         </Button>
+        </Stack>
       </Form>
-      <Output output={output}>
-        {
-          salary !== '' &&
-          tax !== '' &&
-          <TaxCategory salary={parseFloat(salary)} tax={parseFloat(tax)} />
-        }
-        {
-          salary !== '' &&
-          tax === '' &&
-          <TaxAmount salary={parseFloat(salary)} />
-        }
-      </Output>
+      <CardContainer>
+        {taxCategories.map((item) => {
+          const calculatedTax = output?.[item.id] || 0;
+          return (<Box key={item.title} >
+            <CategoryCard
+              title={item.title}
+              description={item.description}
+              link={item.link}
+              amount={calculatedTax}
+              checked={Math.abs(tax - calculatedTax) < 2}
+            />
+          </Box>);
+        })}
+      </CardContainer>
     </Main>
   );
 }
