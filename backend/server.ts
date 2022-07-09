@@ -32,10 +32,15 @@ app.post('/', (req, res) => {
     pdf(req.files['pdf']).then(({ text }) => {
       const lines = text.split('\n');
       const tax = lines.findIndex((line) => line.toLocaleLowerCase().includes('tax'));
-      res.send({
-        tax: grep(lines, tax),
-        salary: grep(lines.reverse(), lines.length - tax - 1),
-      });
+      if (tax === -1) {
+        res.status(400);
+        res.end();
+      } else {
+        res.send({
+          tax: grep(lines, tax),
+          salary: grep(lines.reverse(), lines.length - tax - 1),
+        });
+      }
     }).catch(() => {
       res.status(500);
       res.end();

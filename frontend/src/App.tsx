@@ -6,14 +6,20 @@ import {
   Box,
   Typography,
   Stack,
+  IconButton,
+  Snackbar,
+  Alert,
 } from '@mui/material';
 import { styled } from '@mui/system';
-import UploadButton from './components/Upload';
 import CalculateIcon from '@mui/icons-material/Calculate';
+import CloseIcon from '@mui/icons-material/Close';
+import {
+  calcNonResidentTax,
+  calcNoTaxFreeThresholdTax,
+  calcTaxFreeThresholdTax,
+} from './utils';
 import CategoryCard from './components/CategoryCard';
-import { calcNonResidentTax, calcNoTaxFreeThresholdTax, calcTaxFreeThresholdTax } from './utils';
-
-type OutputProps = { output: boolean };
+import UploadButton from './components/Upload';
 
 const Main = styled('div')({
   height: '100vh',
@@ -84,6 +90,11 @@ function App() {
   const [taxInput, setTaxInput] = React.useState<string>('');
   const [tax, setTax] = React.useState<number>(NaN);
   const [output, setOutput] = React.useState<TaxResult | undefined>();
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = (_: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason !== 'clickaway') setOpen(false);
+  };
 
   const onChangeHandler = (
     input: string,
@@ -105,6 +116,22 @@ function App() {
     });
     setTax(parseFloat(taxInput));
   };
+
+  const action = (
+    <React.Fragment>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   return (
     <Main>
@@ -130,6 +157,7 @@ function App() {
         <UploadButton
           setTax={setTaxInput}
           setSalary={setSalary}
+          setOpen={setOpen}
         />
         <Stack direction="row" alignItems="center" spacing={2}>
         <Button
@@ -142,6 +170,20 @@ function App() {
           Calculate
         </Button>
         </Stack>
+        <Snackbar
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          open={open}
+          autoHideDuration={3000}
+          onClose={handleClose}
+          action={action}
+        >
+          <Alert
+            severity='error'
+            onClose={handleClose}
+          >
+          Payslip was not uploaded successfully
+          </Alert>
+        </Snackbar>
       </Form>
       <CardContainer>
         {taxCategories.map((item) => {
