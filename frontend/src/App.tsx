@@ -51,8 +51,8 @@ function App() {
   }, [salary, tax]);
 
   const onChangeHandler = (
-    input: string,
-    setState: React.Dispatch<React.SetStateAction<string>>,
+      input: string,
+      setState: React.Dispatch<React.SetStateAction<string>>,
   ) => {
     if (input === '') {
       setState('');
@@ -95,8 +95,16 @@ function App() {
         </Button>
       </Form>
       <Output output={output}>
-        {salary !== '' && tax !== '' && <TaxCategory salary={parseFloat(salary)} tax={parseFloat(tax)} />}
-        {salary !== '' && tax === '' && <TaxAmount salary={parseFloat(salary)} />}
+        {
+          salary !== '' &&
+          tax !== '' &&
+          <TaxCategory salary={parseFloat(salary)} tax={parseFloat(tax)} />
+        }
+        {
+          salary !== '' &&
+          tax === '' &&
+          <TaxAmount salary={parseFloat(salary)} />
+        }
       </Output>
     </Main>
   );
