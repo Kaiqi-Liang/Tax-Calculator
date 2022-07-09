@@ -133,7 +133,7 @@ function App() {
   return (
     <Main>
       <CssBaseline />
-      <Title variant='h1'>
+      <Title variant='h2'>
         Tax Calculator
       </Title>
       <Form>

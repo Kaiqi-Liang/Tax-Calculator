@@ -15,6 +15,8 @@ function UploadButton({ setTax, setSalary, setOpen }:
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
   },
 ) {
+  const media = window.matchMedia('(max-width: 600px)');
+  const [mobile, setMobile] = React.useState(media.matches);
   return (
     <Stack
       direction='row'
@@ -53,7 +55,7 @@ function UploadButton({ setTax, setSalary, setOpen }:
           startIcon={<Receipt />}
           endIcon={<Receipt />}
         >
-          Upload Payslip
+          { `Upload ${mobile ? '' : 'Payslip'}` }
         </Button>
       </label>
     </Stack>
