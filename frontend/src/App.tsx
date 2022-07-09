@@ -4,12 +4,16 @@ import {
   CssBaseline,
   Button,
   Box,
+  Snackbar,
+  IconButton,
+  Alert,
 } from '@mui/material';
 import { styled } from '@mui/system';
 import TaxAmount from './components/TaxAmount';
 import TaxCategory from './components/TaxCategory';
 import UploadButton from './components/Upload';
 import CalculateIcon from '@mui/icons-material/Calculate';
+import CloseIcon from '@mui/icons-material/Close';
 
 type OutputProps = { output: boolean };
 const Main = styled('div')({
@@ -45,10 +49,15 @@ function App() {
   const [salary, setSalary] = React.useState<string>('');
   const [tax, setTax] = React.useState<string>('');
   const [output, setOutput] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
     setOutput(false);
   }, [salary, tax]);
+
+  const handleClose = (_: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason !== 'clickaway') setOpen(false);
+  };
 
   const onChangeHandler = (
       input: string,
@@ -60,6 +69,22 @@ function App() {
       setState(input);
     }
   };
+
+  const action = (
+    <React.Fragment>
+      <Button color="secondary" size="small" onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   return (
     <Main>
@@ -83,6 +108,7 @@ function App() {
           <UploadButton
             setTax={setTax}
             setSalary={setSalary}
+            setOpen={setOpen}
           />
         </Input>
         <Button
@@ -93,6 +119,20 @@ function App() {
         >
           Calculate
         </Button>
+        <Snackbar
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          open={open}
+          autoHideDuration={3000}
+          onClose={handleClose}
+          action={action}
+        >
+          <Alert
+            severity='error'
+            onClose={handleClose}
+          >
+          Payslip was not uploaded successfully
+          </Alert>
+        </Snackbar>
       </Form>
       <Output output={output}>
         {

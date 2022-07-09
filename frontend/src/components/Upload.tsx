@@ -2,16 +2,18 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import { IconButton, Stack } from '@mui/material';
 import { UploadFile } from '@mui/icons-material';
+// import { SERVER_URL } from '../config';
 const SERVER_URL = 'https://tax-calculator-355806.ts.r.appspot.com/';
 
 const Input = styled('input')({
   display: 'none',
 });
 
-function UploadButton({ setTax, setSalary }:
+function UploadButton({ setTax, setSalary, setOpen }:
   {
     setTax: React.Dispatch<React.SetStateAction<string>>,
     setSalary: React.Dispatch<React.SetStateAction<string>>,
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>,
   },
 ) {
   return (
@@ -31,11 +33,12 @@ function UploadButton({ setTax, setSalary }:
                 body: form,
               }).then((r) => {
                 if (r.ok) return r.json();
-                else throw new Error('No pdf uploaded');
+                else throw new Error();
               }).then(({ tax, salary }) => {
                 setTax(tax.toString());
                 setSalary(salary.toString());
-              }).catch((e) => console.warn(e));
+                setOpen(false);
+              }).catch(() => setOpen(true));
             }
           }}
         />
