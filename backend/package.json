@@ -4,7 +4,9 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "start": "nodemon server.ts"
+    "start": "node dist/server.js",
+    "gcp-build": "tsc -p .",
+    "nodemon": "nodemon server.ts"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +25,7 @@
     "@types/express-fileupload": "^1.2.2",
     "@types/morgan": "^1.9.3",
     "@types/pdf-parse": "^1.1.1",
-    "nodemon": "^2.0.18"
+    "nodemon": "^2.0.18",
+    "typescript": "^4.7.4"
   }
 }

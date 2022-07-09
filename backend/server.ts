@@ -1,4 +1,4 @@
-import { PORT, SERVER_URL } from '../config';
+import { PORT, SERVER_URL } from './config';
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
@@ -18,6 +18,10 @@ const grep = (lines: string[], index: number) => {
     }
   }
 }
+
+app.get('/', (req, res) => {
+  res.send('<h1>Welcome to the backend of Tax Calculator<\h1>');
+});
 
 app.post('/', (req, res) => {
   if (!req.files || !req.files['pdf']) {
@@ -39,4 +43,4 @@ app.post('/', (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log(`Starting server at: '${SERVER_URL}'`));
+app.listen(process.env.PORT || PORT, () => console.log(`Starting server at: '${SERVER_URL}'`));
