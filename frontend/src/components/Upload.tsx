@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import { Button, Stack } from '@mui/material';
+import { IconButton, Stack } from '@mui/material';
 import { UploadFile } from '@mui/icons-material';
 const SERVER_URL = 'https://tax-calculator-355806.ts.r.appspot.com/';
 
@@ -39,9 +39,9 @@ function UploadButton({ setTax, setSalary }:
             }
           }}
         />
-        <Button variant="contained">
+        <IconButton component='span'>
           <UploadFile />
-        </Button>
+        </IconButton>
       </label>
     </Stack>
   );
