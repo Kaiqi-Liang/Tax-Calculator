@@ -58,6 +58,8 @@ export default function CategoryCard({
         <Link
           href={link}
           target="_blank"
+          color='secondary'
+          sx={{ textDecoration: 'none !important' }}
         >
           Learn More
         </Link>

@@ -24,7 +24,6 @@ import UploadButton from './components/Upload';
 const Main = styled('div')({
   height: '100vh',
   width: '100vw',
-  margin: '5rem',
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
@@ -37,11 +36,16 @@ const Form = styled('form')({
   padding: '20px',
   marginBottom: '2rem',
   columnGap: '1rem',
+  rowGap: '1rem',
 });
 
 const CardContainer = styled(Box)({
   display: 'flex',
   gap: '2rem',
+  paddingBottom: '3rem',
+  flexWrap: 'wrap',
+  justifyContent: 'center',
+  padding: '0 5rem',
 });
 
 const Title = styled(Typography)({
