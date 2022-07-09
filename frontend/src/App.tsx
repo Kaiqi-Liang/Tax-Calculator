@@ -1,9 +1,9 @@
 import React from 'react';
-import { TextField,
+import {
+  TextField,
   CssBaseline,
   Button,
-  Checkbox,
-  FormControlLabel,
+  Box,
 } from '@mui/material';
 import { styled } from '@mui/system';
 import TaxAmount from './components/TaxAmount';
@@ -28,65 +28,63 @@ const Form = styled('form')({
   justifyContent: 'space-between',
   alignItems: 'center',
   height: '350px',
-  border: '1px solid',
   padding: '20px',
 });
 
-const Output = styled('div')<OutputProps>(({ output } ) => ({
+const Input = styled(Box)({
+  display: 'flex',
+  gap: '1rem',
+});
+
+const Output = styled('div')<OutputProps>(({ output }) => ({
   display: output ? 'block' : 'none',
   border: '1px solid',
 }));
 
 function App() {
-  const [salary, setSalary] = React.useState(0);
-  const [tax, setTax] = React.useState(0);
-  const [checkbox, setCheckbox] = React.useState(false);
+  const [salary, setSalary] = React.useState<string>('');
+  const [tax, setTax] = React.useState<string>('');
   const [output, setOutput] = React.useState(false);
 
   React.useEffect(() => {
     setOutput(false);
-  }, [salary, tax, checkbox]);
+  }, [salary, tax]);
 
   const onChangeHandler = (
-      value: string,
-      setState: React.Dispatch<React.SetStateAction<number>>,
+    input: string,
+    setState: React.Dispatch<React.SetStateAction<string>>,
   ) => {
-    setState(parseFloat(value));
+    if (input === '') {
+      setState('');
+    } else if (!isNaN(parseFloat(input))) {
+      setState(input);
+    }
   };
 
   return (
     <Main>
       <CssBaseline />
       <Form>
-        <TextField
-          variant='outlined'
-          value={salary}
-          label='Fortnightly salary'
-          type='number'
-          onChange={({ target }) => onChangeHandler(target.value, setSalary)}
-        />
-        <FormControlLabel
-          control={
-            <Checkbox
-              value={checkbox}
-              onChange={() => setCheckbox(!checkbox)}
-            />
-          }
-          label='Do you want to enter tax'
-        />
-        <TextField
-          variant='outlined'
-          value={tax}
-          label='Tax'
-          type='number'
-          onChange={({ target }) => onChangeHandler(target.value, setTax)}
-          disabled={!checkbox}
-        />
-        <UploadButton
-          setTax={setTax}
-          setSalary={setSalary}
-          setCheckbox={setCheckbox}
-        />
+        <Input>
+          <TextField
+            variant='outlined'
+            value={salary}
+            label='Fortnightly salary'
+            type='number'
+            onChange={({ target }) => onChangeHandler(target.value, setSalary)}
+          />
+          <TextField
+            variant='outlined'
+            value={tax}
+            label='Tax (optional)'
+            type='number'
+            onChange={({ target }) => onChangeHandler(target.value, setTax)}
+          />
+          <UploadButton
+            setTax={setTax}
+            setSalary={setSalary}
+          />
+        </Input>
         <Button
           variant='contained'
           onClick={() => setOutput(true)}
@@ -97,10 +95,8 @@ function App() {
         </Button>
       </Form>
       <Output output={output}>
-        {checkbox ?
-          <TaxCategory salary={salary} tax={tax} /> :
-          <TaxAmount salary={salary} />
-        }
+        {salary !== '' && tax !== '' && <TaxCategory salary={parseFloat(salary)} tax={parseFloat(tax)} />}
+        {salary !== '' && tax === '' && <TaxAmount salary={parseFloat(salary)} />}
       </Output>
     </Main>
   );

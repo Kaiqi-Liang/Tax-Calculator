@@ -1,19 +1,18 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import { IconButton, Button, Stack } from '@mui/material';
 import Receipt from '@mui/icons-material/Receipt';
-import { SERVER_URL } from '../config';
+import { UploadFile } from '@mui/icons-material';
+const SERVER_URL = 'https://tax-calculator-355806.ts.r.appspot.com/';
 
 const Input = styled('input')({
   display: 'none',
 });
 
-function UploadButton({ setTax, setSalary, setCheckbox }:
+function UploadButton({ setTax, setSalary }:
   {
-    setTax: React.Dispatch<React.SetStateAction<number>>,
-    setSalary: React.Dispatch<React.SetStateAction<number>>,
-    setCheckbox: React.Dispatch<React.SetStateAction<boolean>>,
+    setTax: React.Dispatch<React.SetStateAction<string>>,
+    setSalary: React.Dispatch<React.SetStateAction<string>>,
   },
 ) {
   return (
@@ -35,22 +34,15 @@ function UploadButton({ setTax, setSalary, setCheckbox }:
                 if (r.ok) return r.json();
                 else throw new Error('No pdf uploaded');
               }).then(({ tax, salary }) => {
-                setTax(tax);
-                setSalary(salary);
-                setCheckbox(true);
+                setTax(tax.toString());
+                setSalary(salary.toString());
               }).catch((e) => console.warn(e));
             }
           }}
         />
-        <Button
-          variant="contained"
-          color='secondary'
-          component="span"
-          startIcon={<Receipt />}
-          endIcon={<Receipt />}
-        >
-          Upload Payslip
-        </Button>
+        <IconButton>
+          <UploadFile />
+        </IconButton>
       </label>
     </Stack>
   );
