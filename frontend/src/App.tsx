@@ -46,8 +46,12 @@ const Form = styled('form')({
 });
 
 const CardContainer = styled(Box)({
+  'display': 'flex',
+  'flexDirection': 'column',
+  'gap': '1rem',
   '@media (min-width: 800px)': {
-    'display': 'flex',
+    display: 'flex',
+    flexDirection: 'row',
   },
 });
 
@@ -59,7 +63,6 @@ const CardColumn = styled(Box)({
     alignItems: 'flex-start',
   },
   'gap': '1rem',
-  'margin': '0 1rem',
 });
 
 const Title = styled(Typography)({
