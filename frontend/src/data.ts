@@ -5,7 +5,7 @@ export const taxCategories : TaxCategoryData[] = [
   {
     id: TaxCategory.TaxFreeThreshold,
     title: 'Tax Free Threshold',
-    description: 'If you are an Australian resident for tax purposes for a full year, you pay no tax on the first $18,200 of your income. This is called the tax-free threshold.',
+    description: 'If you are an Australian resident for tax purposes for a full year, you pay no tax on the first $18,200 of your income. This is called the tax-free threshold. Claiming the tax-free threshold reduces the amount of tax withheld from your income.',
     link: 'https://www.ato.gov.au/Individuals/Ind/Tax-free-threshold-for-newcomers-to-Australia/',
     taxTable: [
       [18200, 0, 0],
@@ -18,7 +18,7 @@ export const taxCategories : TaxCategoryData[] = [
   {
     id: TaxCategory.NoTaxFreeThreshold,
     title: 'No Tax Free Threshold',
-    description: 'Claiming the tax-free threshold ($18,200) reduces the amount of tax withheld from your income. If you have more than one payers at the same time, generally you only claim the tax-free threshold from one payer so that payer will withhold tax from your income at a lower rate than the others.',
+    description: 'If you are in the position of having more than one jobs, it is recommended to claim the tax free threshold from the payer who usually pays the highest, your other payers then withhold tax from your income at a higher rate, which is known as the no tax-free threshold rate, this helps reduce the likelyhood of a tax debt at the end of the financial year.',
     link: 'https://www.ato.gov.au/Individuals/Jobs-and-employment-types/Working-as-an-employee/Income-from-more-than-one-job/',
     taxTable: [
       [45000, 0, 0.19],

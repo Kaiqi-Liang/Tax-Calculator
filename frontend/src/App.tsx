@@ -195,7 +195,7 @@ function App() {
           severity='error'
           onClose={handleCloseError}
         >
-          Failed uploading payslip
+          Please upload a valid payslip
         </Alert>
       </Snackbar>
       <Snackbar

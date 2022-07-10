@@ -6,7 +6,7 @@ Have you ever seen an option that says **Tax Free Threshold** on one of the docu
 
 There are 4 tax categories which you might be in for a given job that has income, each of which is described on the website. If you enter your salary and pay cycle it will calculate the tax incurs for each category. You can also choose to upload a pay slip which will autofill them along with the amount of tax withheld by your employer and determines which category you were taxed in.
 
-This is extremely helpful when you have multiple sources of income. Since it is recommended to claim the tax free threshold from the payer who usually pays the highest, your other payers then withhold tax from your income at a higher rate, which is known as the **No Tax Free Threshold** rate, this helps reduce the likelyhood of a tax debt at the end of the financial year, you might forget which one you claimed, or you might get taxed at the wrong rate for whatever reason (taxed as a working holiday maker when you are a resident), this tool can help you solve all these problems.
+This is extremely helpful when you have multiple sources of income. Since you only claim the tax-free threshold from one payer so that payer will withhold tax from your income at a lower rate than the others, you might forget which one you claimed, or you could get taxed at the wrong rate for whatever reason (taxed as a working holiday maker when you are a resident), this tool can help you solve all these problems.
 
 ## Deployment
 
