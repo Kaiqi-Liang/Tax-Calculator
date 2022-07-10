@@ -46,8 +46,8 @@ export default function CategoryCard({
   const [open, setIsOpen] = useState(false);
   return (
     <CardActionArea sx={{ borderRadius: '5px' }}>
-      <Card layout onClick={() => setIsOpen(!open)}>
-        <motion.div layout='position'>
+      <Card layout>
+        <motion.div layout='position' onClick={() => setIsOpen(!open)}>
           <Header>
             <Typography variant='h3'>
               ${amount}
@@ -73,11 +73,9 @@ export default function CategoryCard({
             )
           }
         </motion.div>
-        <Box>
-          <Link href={link} target='_blank' sx={{ textDecoration: 'none !important' }}>
-            Learn More
-          </Link>
-        </Box>
+        <Link href={link} target='_blank' sx={{ textDecoration: 'none !important' }}>
+          Learn More
+        </Link>
       </Card>
     </CardActionArea>
   );
