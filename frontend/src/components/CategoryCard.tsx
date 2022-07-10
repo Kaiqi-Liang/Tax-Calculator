@@ -1,17 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  CardActionArea,
   Box,
-  Button,
-  CardActions,
-  CardContent,
+  CardActionArea,
   Typography,
+  Link,
 } from '@mui/material';
 import { styled } from '@mui/system';
-import MuiCard from '@mui/material/Card';
 import { CheckCircleOutline } from '@mui/icons-material';
 import TaxTable from './TaxTable';
 import { TaxTableData } from '../type';
+import { motion } from 'framer-motion';
 
 const Header = styled(Box)({
   display: 'flex',
@@ -20,13 +18,14 @@ const Header = styled(Box)({
   marginBottom: '0.4rem',
 });
 
-const Card = styled(MuiCard)({
+const Card = styled(motion.div)({
   maxWidth: '40rem',
-  minHeight: '40rem',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',
   padding: '1rem',
+  margin: '1rem',
+  backgroundColor: 'rgb(28,28,28)',
 });
 
 export default function CategoryCard({
@@ -44,13 +43,11 @@ export default function CategoryCard({
   checked?: boolean,
   taxTable: TaxTableData,
 }) {
+  const [open, setIsOpen] = useState(false);
   return (
-    <CardActionArea
-      href={link}
-      target='_blank'
-    >
-      <Card>
-        <CardContent>
+    <CardActionArea>
+      <Card layout onClick={() => setIsOpen(!open)}>
+        <motion.div layout='position'>
           <Header>
             <Typography variant='h3'>
               ${amount}
@@ -65,16 +62,22 @@ export default function CategoryCard({
           <Typography variant='body2'>
             {description}
           </Typography>
-          <TaxTable data={taxTable}/>
-        </CardContent>
-        <CardActions>
-          <Button
-            color='secondary'
-            size='large'
-          >
+          <br />
+          {
+            open &&
+            (
+              <>
+                <TaxTable data={taxTable} />
+                <br />
+              </>
+            )
+          }
+        </motion.div>
+        <Box>
+          <Link href={link} target='_blank' sx={{ textDecoration: 'none !important' }}>
             Learn More
-          </Button>
-        </CardActions>
+          </Link>
+        </Box>
       </Card>
     </CardActionArea>
   );

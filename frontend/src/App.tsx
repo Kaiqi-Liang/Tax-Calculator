@@ -46,10 +46,18 @@ const Form = styled('form')({
 });
 
 const CardContainer = styled(Box)({
-  display: 'flex',
-  gap: '2rem',
-  flexWrap: 'wrap',
-  justifyContent: 'center',
+  '@media (min-width: 800px)': {
+    'display': 'flex',
+  },
+});
+
+const CardColumn = styled(Box)({
+  'display': 'flex',
+  'flexDirection': 'column',
+  '@media (min-width: 1400px)': {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
 });
 
 const Title = styled(Typography)({
@@ -200,10 +208,12 @@ function App() {
         </Alert>
       </Snackbar>
       <CardContainer>
-        {taxCategories.map((category) => {
+        <CardColumn>
+        {taxCategories.slice(0, 2).map((category) => {
           const calculatedTax = output?.[category.id] || 0;
-          return (<Box key={category.title} >
+          return (
             <CategoryCard
+              key={category.title}
               title={category.title}
               description={category.description}
               link={category.link}
@@ -211,8 +221,25 @@ function App() {
               checked={Math.abs(tax - calculatedTax) < 2}
               taxTable={category.taxTable}
             />
-          </Box>);
+          );
         })}
+        </CardColumn>
+        <CardColumn>
+        {taxCategories.slice(2).map((category) => {
+          const calculatedTax = output?.[category.id] || 0;
+          return (
+            <CategoryCard
+              key={category.title}
+              title={category.title}
+              description={category.description}
+              link={category.link}
+              amount={calculatedTax}
+              checked={Math.abs(tax - calculatedTax) < 2}
+              taxTable={category.taxTable}
+            />
+          );
+        })}
+        </CardColumn>
       </CardContainer>
     </Main>
   );
