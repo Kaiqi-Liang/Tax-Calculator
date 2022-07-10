@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node dist/server.js",
     "gcp-build": "tsc -p .",
-    "nodemon": "nodemon server.ts"
+    "nodemon": "nodemon server.ts",
+    "lint": "eslint --fix --ext .ts,.tsx"
   },
   "keywords": [],
   "author": "",

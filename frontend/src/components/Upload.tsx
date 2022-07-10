@@ -1,22 +1,28 @@
-import * as React from 'react';
+import React from 'react';
+import {
+  Button,
+  Stack,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Button, Stack } from '@mui/material';
-import Receipt from '@mui/icons-material/Receipt';
+import { Receipt } from '@mui/icons-material';
+import { PayCycle } from '../type';
 const SERVER_URL = 'https://tax-calculator-355806.ts.r.appspot.com/';
 
 const Input = styled('input')({
   display: 'none',
 });
 
-function UploadButton({ setTax, setSalary, setOpen }:
+function UploadButton({ mobile, setTax, setSalary, setPayCycle, setOpenUploading, setOpenError, setOpenSuccess }:
   {
+    mobile: boolean,
     setTax: React.Dispatch<React.SetStateAction<string>>,
     setSalary: React.Dispatch<React.SetStateAction<string>>,
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    setPayCycle: React.Dispatch<React.SetStateAction<PayCycle>>,
+    setOpenUploading: React.Dispatch<React.SetStateAction<boolean>>,
+    setOpenError: React.Dispatch<React.SetStateAction<boolean>>,
+    setOpenSuccess: React.Dispatch<React.SetStateAction<boolean>>,
   },
 ) {
-  const media = window.matchMedia('(max-width: 600px)');
-  const [mobile, setMobile] = React.useState(media.matches);
   return (
     <Stack
       direction='row'
@@ -29,6 +35,7 @@ function UploadButton({ setTax, setSalary, setOpen }:
           id='contained-button-file'
           type='file'
           onChange={({ target }) => {
+            setOpenUploading(true);
             const files = target.files;
             if (files) {
               const form = new FormData();
@@ -42,8 +49,14 @@ function UploadButton({ setTax, setSalary, setOpen }:
               }).then(({ tax, salary }) => {
                 setTax(tax.toString());
                 setSalary(salary.toString());
-                setOpen(false);
-              }).catch(() => setOpen(true));
+                setPayCycle('Fornightly');
+                setOpenUploading(false);
+                setOpenError(false);
+                setOpenSuccess(true);
+              }).catch(() => {
+                setOpenError(true);
+                setOpenUploading(false);
+              });
             }
           }}
         />
@@ -54,6 +67,7 @@ function UploadButton({ setTax, setSalary, setOpen }:
           component='span'
           startIcon={<Receipt />}
           endIcon={<Receipt />}
+          size='large'
         >
           { `Upload ${mobile ? '' : 'Payslip'}` }
         </Button>

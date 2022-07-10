@@ -1,3 +1,5 @@
+import { PayCycle } from './type';
+
 type TaxScaleEntry = [number, number, number];
 
 const scale1: TaxScaleEntry[] = [
@@ -22,7 +24,7 @@ const scale2: TaxScaleEntry[] = [
   [3461, 0.4700, 563.5196],
 ];
 
-const lookup = (salary: number, scale: TaxScaleEntry[]) => {
+const fornightly = (salary: number, scale: TaxScaleEntry[]) => {
   const trunc = Math.trunc(salary / 2);
   const entry = scale.filter((bracket) => bracket[0] < trunc).pop();
   if (entry) {
@@ -33,43 +35,108 @@ const lookup = (salary: number, scale: TaxScaleEntry[]) => {
   }
 };
 
-type Category = 'No Tax Free Threshold'
-              | 'Tax Free Threshold'
-              | 'Non Resident'
-              | 'Other';
-
-const withinCategory = (
-    category: (salary: number) => number): (salary: number, tax: number
-) => boolean => {
-  return (salary: number, tax: number) => Math.abs(tax - category(salary)) < 2;
-};
-
-export const findCategory = (salary: number, tax: number): Category => {
-  if (withinCategory(calcTaxFreeThresholdTax)(salary, tax)) {
-    return 'Tax Free Threshold';
-  } else if (withinCategory(calcNoTaxFreeThresholdTax)(salary, tax)) {
-    return 'No Tax Free Threshold';
-  } else if (withinCategory(calcNonResidentTax)(salary, tax)) {
-    return 'Non Resident';
+const weekly = (salary: number, scale: TaxScaleEntry[]) => {
+  const trunc = Math.trunc(salary);
+  const entry = scale.filter((bracket) => bracket[0] < trunc).pop();
+  if (entry) {
+    const [_, a, b] = entry;
+    return Math.round((trunc + 0.99) * a - b);
   } else {
-    return 'Other';
+    return 0;
   }
 };
 
-export const calcNonResidentTax = (salary: number) => {
-  if (salary < 4613) {
-    return Math.trunc(salary * 0.325);
-  } else if (salary < 6921) {
-    return Math.trunc(1499 + (salary - 4613) * 0.37);
-  } else {
-    return Math.trunc(2353 + (salary - 6921) * 0.37);
+const calcConversion = (payCycle: PayCycle) => {
+  switch (payCycle) {
+    case 'Annually':
+      return 1;
+    case 'Fornightly':
+      return 26;
+    case 'Weekly':
+      return 52;
+    default: {
+      const _: never = payCycle;
+      return 0;
+    }
   }
 };
 
-export function calcNoTaxFreeThresholdTax(salary: number) {
-  return lookup(salary, scale1);
+export const calcNonResidentTax = (salary: number, payCycle: PayCycle = 'Fornightly') => {
+  const conversion = calcConversion(payCycle);
+  salary *= conversion;
+  if (salary < 120000) {
+    return Math.trunc(salary * 0.325 / conversion);
+  } else if (salary < 180000) {
+    return Math.trunc((120000 * 0.325 + (salary - 120000) * 0.37) / conversion);
+  } else {
+    return Math.trunc((61200 + (salary - 180000) * 0.45) / conversion);
+  }
+};
+
+export const calcWorkingHolidayMakerTax = (salary: number, payCycle: PayCycle = 'Fornightly') => {
+  const conversion = calcConversion(payCycle);
+  salary *= conversion;
+  if (salary < 45000) {
+    return Math.trunc(salary * 0.15 / conversion);
+  } else if (salary < 120000) {
+    return Math.trunc((45000 * 0.15 + (salary - 45000) * 0.325) / conversion);
+  } else if (salary < 180000) {
+    return Math.trunc((31125 + (salary - 120000) * 0.37) / conversion);
+  } else {
+    return Math.trunc((53325 + (salary - 180000) * 0.45) / conversion);
+  }
+};
+
+export function calcNoTaxFreeThresholdTax(salary: number, payCycle: PayCycle = 'Fornightly') {
+  switch (payCycle) {
+    case 'Annually': {
+      const conversion = calcConversion(payCycle);
+      salary *= conversion;
+      if (salary < 45000) {
+        return Math.trunc(salary * 0.19 / conversion);
+      } else if (salary < 120000) {
+        return Math.trunc((45000 * 0.19 + (salary - 45000) * 0.325) / conversion);
+      } else if (salary < 180000) {
+        return Math.trunc((29467 + (salary - 120000) * 0.37) / conversion);
+      } else {
+        return Math.trunc((51667 + (salary - 180000) * 0.45) / conversion);
+      }
+    }
+    case 'Fornightly':
+      return fornightly(salary, scale1);
+    case 'Weekly':
+      return weekly(salary, scale1);
+    default: {
+      const _: never = payCycle;
+      return 0;
+    }
+  }
 }
 
-export function calcTaxFreeThresholdTax(salary: number) {
-  return lookup(salary, scale2);
+export function calcTaxFreeThresholdTax(salary: number, payCycle: PayCycle = 'Fornightly') {
+  switch (payCycle) {
+    case 'Annually': {
+      const conversion = calcConversion(payCycle);
+      salary *= conversion;
+      if (salary < 18200) {
+        return 0;
+      } else if (salary < 45000) {
+        return Math.trunc((salary - 18200) * 0.19 / conversion);
+      } else if (salary < 120000) {
+        return Math.trunc((45000 * 0.19 + (salary - 45000) * 0.325) / conversion);
+      } else if (salary < 180000) {
+        return Math.trunc((29467 + (salary - 120000) * 0.37) / conversion);
+      } else {
+        return Math.trunc((51667 + (salary - 180000) * 0.45) / conversion);
+      }
+    }
+    case 'Fornightly':
+      return fornightly(salary, scale2);
+    case 'Weekly':
+      return weekly(salary, scale2);
+    default: {
+      const _: never = payCycle;
+      return 0;
+    }
+  }
 }

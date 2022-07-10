@@ -5,21 +5,28 @@ import {
   Button,
   Box,
   Typography,
-  Stack,
-  IconButton,
   Snackbar,
   Alert,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from '@mui/material';
 import { styled } from '@mui/system';
 import CalculateIcon from '@mui/icons-material/Calculate';
-import CloseIcon from '@mui/icons-material/Close';
 import {
-  calcNonResidentTax,
   calcNoTaxFreeThresholdTax,
   calcTaxFreeThresholdTax,
+  calcNonResidentTax,
+  calcWorkingHolidayMakerTax,
 } from './utils';
 import CategoryCard from './components/CategoryCard';
 import UploadButton from './components/Upload';
+import {
+  PayCycle,
+  TaxCategory,
+} from './type';
+import { taxCategories } from './data';
 
 const Main = styled('main')({
   width: '100vw',
@@ -34,7 +41,7 @@ const Form = styled('form')({
   gridTemplateColumns: '1fr 1fr',
   height: '12rem',
   padding: '20px',
-  marginBottom: '2rem',
+  marginBottom: '5rem',
   columnGap: '1rem',
   rowGap: '1rem',
 });
@@ -50,47 +57,34 @@ const Title = styled(Typography)({
   margin: '3rem',
 });
 
-enum TaxCategory {
-  TaxFreeThreshold = 'TaxFreeThreshold',
-  NonTaxFreeThreshold = 'nonTaxFreeThreshold',
-  NonResident = 'nonResident'
-}
-
-const taxCategories = [
-  {
-    id: TaxCategory.TaxFreeThreshold,
-    title: 'Tax Free Threshold',
-    description: 'If you are an Australian resident for tax purposes for a full year, you pay no tax on the first $18,200 of your income. This is called the tax-free threshold.',
-    link: 'https://www.ato.gov.au/Individuals/Ind/Tax-free-threshold-for-newcomers-to-Australia/',
-    taxFn: calcTaxFreeThresholdTax,
-  },
-  {
-    id: TaxCategory.NonTaxFreeThreshold,
-    title: 'Non Tax Free Threshold',
-    description: 'Claiming the tax-free threshold ($18,200) reduces the amount of tax withheld from your income. If you have more than one payer at the same time, generally, you only claim the tax-free threshold from one payer so that payer will tax you slightly less than the others',
-    link: 'https://www.ato.gov.au/Individuals/Jobs-and-employment-types/Working-as-an-employee/Income-from-more-than-one-job/',
-    taxFn: calcNoTaxFreeThresholdTax,
-  },
-  {
-    id: TaxCategory.NonResident,
-    title: 'Non Resident',
-    description: 'Essentially, this will affect how much tax you pay. Non-residents get taxed at a higher rate than residents in Australia. The main requirement to be deemed a resident for tax purposes is that you have continuously resided in Australia for a period of 183 days (6 months).',
-    link: 'https://www.ato.gov.au/Individuals/Coming-to-Australia-or-going-overseas/Your-tax-residency/Australian-resident-for-tax-purposes/',
-    taxFn: calcNonResidentTax,
-  },
-];
+const Calculate = styled(Button)({
+  gridColumn: '1 / -1',
+});
 
 type TaxResult = Record<TaxCategory, number>;
 
 function App() {
-  const [salary, setSalary] = React.useState<string>('');
-  const [taxInput, setTaxInput] = React.useState<string>('');
-  const [tax, setTax] = React.useState<number>(NaN);
+  const media = window.matchMedia('(max-width: 600px)');
+  const [mobile, setMobile] = React.useState(media.matches);
+  const [payCycle, setPayCycle] = React.useState<PayCycle>('Fornightly');
+  const [salary, setSalary] = React.useState('');
+  const [taxInput, setTaxInput] = React.useState('');
+  const [tax, setTax] = React.useState(NaN);
   const [output, setOutput] = React.useState<TaxResult | undefined>();
-  const [open, setOpen] = React.useState(false);
+  const [openUploading, setOpenUploading] = React.useState(false);
+  const [openError, setOpenError] = React.useState(false);
+  const [openSuccess, setOpenSuccess] = React.useState(false);
 
-  const handleClose = (_: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason !== 'clickaway') setOpen(false);
+  const handleCloseError = (_: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason !== 'clickaway') setOpenError(false);
+  };
+
+  const handleCloseUploading = (_: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason !== 'clickaway') setOpenUploading(false);
+  };
+
+  const handleCloseSuccess = (_: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason !== 'clickaway') setOpenSuccess(false);
   };
 
   const onChangeHandler = (
@@ -105,30 +99,14 @@ function App() {
   };
 
   const handleCalculate = () => {
-    const fsalary = parseFloat(salary);
     setOutput({
-      [TaxCategory.TaxFreeThreshold]: calcTaxFreeThresholdTax(fsalary),
-      [TaxCategory.NonTaxFreeThreshold]: calcNoTaxFreeThresholdTax(fsalary),
-      [TaxCategory.NonResident]: calcNonResidentTax(fsalary),
+      [TaxCategory.TaxFreeThreshold]: calcTaxFreeThresholdTax(parseFloat(salary), payCycle),
+      [TaxCategory.NoTaxFreeThreshold]: calcNoTaxFreeThresholdTax(parseFloat(salary), payCycle),
+      [TaxCategory.WorkingHolidayMaker]: calcWorkingHolidayMakerTax(parseFloat(salary), payCycle),
+      [TaxCategory.NonResident]: calcNonResidentTax(parseFloat(salary), payCycle),
     });
     setTax(parseFloat(taxInput));
   };
-
-  const action = (
-    <React.Fragment>
-      <Button color="secondary" size="small" onClick={handleClose}>
-        UNDO
-      </Button>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}
-      >
-        <CloseIcon fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
 
   return (
     <Main>
@@ -140,7 +118,7 @@ function App() {
         <TextField
           variant='outlined'
           value={salary}
-          label='Fortnightly salary'
+          label='Salary'
           type='number'
           onChange={({ target }) => onChangeHandler(target.value, setSalary)}
         />
@@ -151,47 +129,88 @@ function App() {
           type='number'
           onChange={({ target }) => onChangeHandler(target.value, setTaxInput)}
         />
+        <FormControl>
+          <InputLabel id="select-label">Pay Cycle</InputLabel>
+          <Select
+            labelId="select-label"
+            id="select"
+            value={payCycle}
+            label="Pay Cycle"
+            onChange={({ target }) => setPayCycle(target.value as PayCycle)}
+          >
+            <MenuItem value={'Annually'}>Annually</MenuItem>
+            <MenuItem value={'Fornightly'}>Fornightly</MenuItem>
+            <MenuItem value={'Weekly'}>Weekly</MenuItem>
+          </Select>
+        </FormControl>
         <UploadButton
+          mobile={mobile}
           setTax={setTaxInput}
           setSalary={setSalary}
-          setOpen={setOpen}
+          setPayCycle={setPayCycle}
+          setOpenUploading={setOpenUploading}
+          setOpenError={setOpenError}
+          setOpenSuccess={setOpenSuccess}
         />
-        <Stack direction="row" alignItems="center" spacing={2}>
-          <Button
-            fullWidth
-            variant='contained'
-            onClick={handleCalculate}
-            startIcon={<CalculateIcon />}
-            endIcon={<CalculateIcon />}
-          >
-          Calculate
-          </Button>
-        </Stack>
-        <Snackbar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          open={open}
-          autoHideDuration={3000}
-          onClose={handleClose}
-          action={action}
+        <Calculate
+          variant='contained'
+          onClick={handleCalculate}
+          startIcon={<CalculateIcon />}
+          endIcon={<CalculateIcon />}
+          size='large'
         >
-          <Alert
-            severity='error'
-            onClose={handleClose}
-          >
-          Payslip was not uploaded successfully
-          </Alert>
-        </Snackbar>
+          Calculate
+        </Calculate>
       </Form>
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        open={openUploading}
+        onClose={handleCloseUploading}
+      >
+        <Alert
+          severity='info'
+          onClose={handleCloseUploading}
+        >
+          Uploading payslip
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        open={openError}
+        autoHideDuration={3000}
+        onClose={handleCloseError}
+      >
+        <Alert
+          severity='error'
+          onClose={handleCloseError}
+        >
+          Failed uploading payslip
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        open={openSuccess}
+        autoHideDuration={2000}
+        onClose={handleCloseSuccess}
+      >
+        <Alert
+          severity='success'
+          onClose={handleCloseSuccess}
+        >
+          Payslip uploaded successfully
+        </Alert>
+      </Snackbar>
       <CardContainer>
-        {taxCategories.map((item) => {
-          const calculatedTax = output?.[item.id] || 0;
-          return (<Box key={item.title} >
+        {taxCategories.map((category) => {
+          const calculatedTax = output?.[category.id] || 0;
+          return (<Box key={category.title} >
             <CategoryCard
-              title={item.title}
-              description={item.description}
-              link={item.link}
+              title={category.title}
+              description={category.description}
+              link={category.link}
               amount={calculatedTax}
               checked={Math.abs(tax - calculatedTax) < 2}
+              taxTable={category.taxTable}
             />
           </Box>);
         })}
