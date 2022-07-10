@@ -33,15 +33,14 @@ const Main = styled('main')({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  padding: '0 5rem 3rem',
+  padding: '0 1rem 1rem',
 });
 
 const Form = styled('form')({
   display: 'grid',
   gridTemplateColumns: '1fr 1fr',
   height: '12rem',
-  padding: '20px',
-  marginBottom: '5rem',
+  marginBottom: '3rem',
   columnGap: '1rem',
   rowGap: '1rem',
 });

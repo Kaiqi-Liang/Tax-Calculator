@@ -13,18 +13,18 @@ import { TaxTableData, TaxTableDataRow } from '../type';
 export default function TaxTable({ data } : { data : TaxTableData }) {
   const getIncomeDisplay = (row : TaxTableDataRow, prevRow?: TaxTableDataRow) => {
     if (prevRow) {
-      if (row[0] === Infinity) return `Over $${prevRow[0]}`;
-      return `$${prevRow[0]}-$${row[0]}`;
+      if (row[0] === Infinity) return `Over $${prevRow[0].toLocaleString()}`;
+      return `$${prevRow[0].toLocaleString()} - $${row[0].toLocaleString()}`;
     }
-    return `$${0}-$${row[0]}`;
+    return `$${0} - $${row[0].toLocaleString()}`;
   };
 
   const getTaxLiabilityDisplay = (row: TaxTableDataRow, prevRow?: TaxTableDataRow) => {
     if (prevRow) {
-      return `$${row[1]} plus ${row[2] * 100}¢ for every $1 over ${prevRow[0]}`;
+      return `$${row[1].toLocaleString()} plus ${(row[2] * 100).toLocaleString()}¢ for every $1 over ${prevRow[0].toLocaleString()}`;
     }
     if (row[1] === 0 && row[2] === 0) return `Nil`;
-    return `${row[2] * 100}¢ for every $1`;
+    return `${(row[2] * 100).toLocaleString()}¢ for every $1`;
   };
 
   const getTaxRateDisplay = (row: TaxTableDataRow) => `${row[2] * 100}%`;
