@@ -57,7 +57,7 @@ const SERVER_URL = 'https://tax-calculator-355806.ts.r.appspot.com/';
 to
 
 ```typescript
-import { SERVER_URL } from "../config";
+import { SERVER_URL } from '../config';
 ```
 
 Run the backend in another terminal
