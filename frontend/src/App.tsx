@@ -58,6 +58,8 @@ const CardColumn = styled(Box)({
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
+  'gap': '1rem',
+  'margin': '0 1rem',
 });
 
 const Title = styled(Typography)({

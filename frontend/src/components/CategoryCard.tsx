@@ -24,8 +24,8 @@ const Card = styled(motion.div)({
   flexDirection: 'column',
   justifyContent: 'space-between',
   padding: '1rem',
-  margin: '1rem',
   backgroundColor: 'rgb(28,28,28)',
+  borderRadius: '5px',
 });
 
 export default function CategoryCard({
@@ -45,7 +45,7 @@ export default function CategoryCard({
 }) {
   const [open, setIsOpen] = useState(false);
   return (
-    <CardActionArea>
+    <CardActionArea sx={{ borderRadius: '5px' }}>
       <Card layout onClick={() => setIsOpen(!open)}>
         <motion.div layout='position'>
           <Header>
