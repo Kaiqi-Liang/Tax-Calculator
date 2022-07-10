@@ -43,6 +43,8 @@ function UploadButton({
           id='contained-button-file'
           type='file'
           onChange={({ target }) => {
+            setOpenError(false);
+            setOpenSuccess(false);
             setOpenUploading(true);
             const files = target.files;
             if (files) {
