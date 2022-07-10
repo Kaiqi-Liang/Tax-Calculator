@@ -50,7 +50,6 @@ const CardContainer = styled(Box)({
   'flexDirection': 'column',
   'gap': '1rem',
   '@media (min-width: 800px)': {
-    display: 'flex',
     flexDirection: 'row',
   },
 });

@@ -46,7 +46,7 @@ export default function CategoryCard({
   const [open, setIsOpen] = useState(false);
   return (
     <CardActionArea sx={{ borderRadius: '5px' }}>
-      <Card layout>
+      <Card layout='position'>
         <motion.div layout='position' onClick={() => setIsOpen(!open)}>
           <Header>
             <Typography variant='h3'>
