@@ -97,9 +97,9 @@ export function calcNoTaxFreeThresholdTax(salary: number, payCycle: PayCycle = '
       } else if (salary < 120000) {
         return Math.trunc((45000 * 0.19 + (salary - 45000) * 0.325) / conversion);
       } else if (salary < 180000) {
-        return Math.trunc((29467 + (salary - 120000) * 0.37) / conversion);
+        return Math.trunc((32925 + (salary - 120000) * 0.37) / conversion);
       } else {
-        return Math.trunc((51667 + (salary - 180000) * 0.45) / conversion);
+        return Math.trunc((55125 + (salary - 180000) * 0.45) / conversion);
       }
     }
     case 'Fornightly':
@@ -123,7 +123,7 @@ export function calcTaxFreeThresholdTax(salary: number, payCycle: PayCycle = 'Fo
       } else if (salary < 45000) {
         return Math.trunc((salary - 18200) * 0.19 / conversion);
       } else if (salary < 120000) {
-        return Math.trunc((45000 * 0.19 + (salary - 45000) * 0.325) / conversion);
+        return Math.trunc((5092 + (salary - 45000) * 0.325) / conversion);
       } else if (salary < 180000) {
         return Math.trunc((29467 + (salary - 120000) * 0.37) / conversion);
       } else {
