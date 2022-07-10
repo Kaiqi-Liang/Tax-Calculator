@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/Tax-Calculator/static/js/main.8cc63313.js",
+    "main.js": "/Tax-Calculator/static/js/main.dfb13ada.js",
     "index.html": "/Tax-Calculator/index.html",
-    "main.8cc63313.js.map": "/Tax-Calculator/static/js/main.8cc63313.js.map"
+    "main.dfb13ada.js.map": "/Tax-Calculator/static/js/main.dfb13ada.js.map"
   },
   "entrypoints": [
-    "static/js/main.8cc63313.js"
+    "static/js/main.dfb13ada.js"
   ]
 }
