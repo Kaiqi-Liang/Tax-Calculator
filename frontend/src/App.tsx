@@ -213,36 +213,36 @@ function App() {
       </Snackbar>
       <CardContainer>
         <CardColumn>
-        {taxCategories.slice(0, 2).map((category) => {
-          const calculatedTax = output?.[category.id] || 0;
-          return (
-            <CategoryCard
-              key={category.title}
-              title={category.title}
-              description={category.description}
-              link={category.link}
-              amount={calculatedTax}
-              checked={Math.abs(tax - calculatedTax) < 2}
-              taxTable={category.taxTable}
-            />
-          );
-        })}
+          {taxCategories.slice(0, 2).map((category) => {
+            const calculatedTax = output?.[category.id] || 0;
+            return (
+              <CategoryCard
+                key={category.title}
+                title={category.title}
+                description={category.description}
+                link={category.link}
+                amount={calculatedTax}
+                checked={Math.abs(tax - calculatedTax) < 2}
+                taxTable={category.taxTable}
+              />
+            );
+          })}
         </CardColumn>
         <CardColumn>
-        {taxCategories.slice(2).map((category) => {
-          const calculatedTax = output?.[category.id] || 0;
-          return (
-            <CategoryCard
-              key={category.title}
-              title={category.title}
-              description={category.description}
-              link={category.link}
-              amount={calculatedTax}
-              checked={Math.abs(tax - calculatedTax) < 2}
-              taxTable={category.taxTable}
-            />
-          );
-        })}
+          {taxCategories.slice(2).map((category) => {
+            const calculatedTax = output?.[category.id] || 0;
+            return (
+              <CategoryCard
+                key={category.title}
+                title={category.title}
+                description={category.description}
+                link={category.link}
+                amount={calculatedTax}
+                checked={Math.abs(tax - calculatedTax) < 2}
+                taxTable={category.taxTable}
+              />
+            );
+          })}
         </CardColumn>
       </CardContainer>
     </Main>

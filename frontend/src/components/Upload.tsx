@@ -12,7 +12,15 @@ const Input = styled('input')({
   display: 'none',
 });
 
-function UploadButton({ mobile, setTax, setSalary, setPayCycle, setOpenUploading, setOpenError, setOpenSuccess }:
+function UploadButton({
+  mobile,
+  setTax,
+  setSalary,
+  setPayCycle,
+  setOpenUploading,
+  setOpenError,
+  setOpenSuccess,
+}:
   {
     mobile: boolean,
     setTax: React.Dispatch<React.SetStateAction<string>>,

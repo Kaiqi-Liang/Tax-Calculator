@@ -73,7 +73,11 @@ export default function CategoryCard({
             )
           }
         </motion.div>
-        <Link href={link} target='_blank' sx={{ textDecoration: 'none !important' }}>
+        <Link
+          href={link}
+          target='_blank'
+          sx={{ textDecoration: 'none !important' }}
+        >
           Learn More
         </Link>
       </Card>
