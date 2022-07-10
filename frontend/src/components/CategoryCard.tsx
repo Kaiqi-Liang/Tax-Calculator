@@ -22,7 +22,7 @@ const Header = styled(Box)({
 
 const Card = styled(MuiCard)({
   maxWidth: '40rem',
-  minHeight: '28rem',
+  minHeight: '40rem',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'space-between',

@@ -11,13 +11,6 @@ import {
 import { TaxTableData, TaxTableDataRow } from '../type';
 
 export default function TaxTable({ data } : { data : TaxTableData }) {
-  const rows = data.map((row, i) => {
-    const income = getIncomeDisplay(row, data[i-1]);
-    const taxLiability = getTaxLiabilityDisplay(row, data[i-1]);
-    const taxRate = getTaxRateDisplay(row);
-    return [income, taxLiability, taxRate];
-  });
-
   const getIncomeDisplay = (row : TaxTableDataRow, prevRow?: TaxTableDataRow) => {
     if (prevRow) {
       if (row[0] === Infinity) return `Over $${prevRow[0]}`;
@@ -35,6 +28,13 @@ export default function TaxTable({ data } : { data : TaxTableData }) {
   };
 
   const getTaxRateDisplay = (row: TaxTableDataRow) => `${row[2] * 100}%`;
+
+  const rows = data.map((row, i) => {
+    const income = getIncomeDisplay(row, data[i-1]);
+    const taxLiability = getTaxLiabilityDisplay(row, data[i-1]);
+    const taxRate = getTaxRateDisplay(row);
+    return [income, taxLiability, taxRate];
+  });
 
   return (
     <TableContainer component={Paper}>
